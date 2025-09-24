@@ -34,7 +34,7 @@ export const App: React.FC = () => {
   useEffect(() => {
     fetchTodos();
   }, []);
-  useEffect(() => selectNewFilter(selectedFilter), [todos]);
+
   const selectNewFilter = (newFilter: string) => {
     setSelectedFilter(newFilter);
     switch (newFilter) {
@@ -51,7 +51,7 @@ export const App: React.FC = () => {
         setFilteredTodos(todos);
     }
   };
-  console.log(todos);
+    useEffect(() => selectNewFilter(selectedFilter), [todos]);
   return (
     <div className="todoapp">
       <h1 className="todoapp__title">todos</h1>
