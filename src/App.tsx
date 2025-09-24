@@ -25,25 +25,23 @@ export const App: React.FC = () => {
   const completedTodosNumber = todos.filter(todo => !todo.completed).length;
   const [selectedFilter, setSelectedFilter] = useState<Filter>(Filter.All);
   const [filteredTodos, setFilteredTodos] = useState<Todo[]>(todos);
-  const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState<ErrorMessage>(
     ErrorMessage.Empty,
   );
 
   const closeError = () => {
-    setShowError(false);
+    setErrorMessage(ErrorMessage.Empty);
   };
   const fetchTodos = async () => {
-    setShowError(false);
+    setErrorMessage(ErrorMessage.Empty);
     try {
       const data: Todo[] = await getTodos();
       setTodos(data);
     } catch (error) {
-      setShowError(true);
-      setTimeout(() => {
-        setShowError(false);
-      }, 3000);
       setErrorMessage(ErrorMessage.LoadError);
+      setTimeout(() => {
+        setErrorMessage(ErrorMessage.Empty);
+      }, 3000);
     }
   };
   const selectNewFilter = (newFilter: Filter) => {
@@ -271,7 +269,7 @@ export const App: React.FC = () => {
         data-cy="ErrorNotification"
         className={classNames(
           'notification is-danger is-light has-text-weight-normal',
-          { hidden: !showError },
+          { hidden: !errorMessage },
         )}
       >
         <button
