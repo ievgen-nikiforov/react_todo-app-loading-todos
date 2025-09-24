@@ -248,20 +248,23 @@ export const App: React.FC = () => {
 
       {/* DON'T use conditional rendering to hide the notification */}
       {/* Add the 'hidden' class to hide the message smoothly */}
-      {showError && (
-        <div
-          data-cy="ErrorNotification"
-          className="notification is-danger is-light has-text-weight-normal"
-        >
-          <button
-            data-cy="HideErrorButton"
-            type="button"
-            className="delete"
-            onClick={() => closeError()}
-          />
-          {/* show only one message at a time */}
-          {errorMessage}
-          {/* <br />
+
+      <div
+        data-cy="ErrorNotification"
+        className={classNames(
+          'notification is-danger is-light has-text-weight-normal',
+          { hidden: !showError },
+        )}
+      >
+        <button
+          data-cy="HideErrorButton"
+          type="button"
+          className="delete"
+          onClick={() => closeError()}
+        />
+        {/* show only one message at a time */}
+        {errorMessage}
+        {/* <br />
         Title should not be empty
         <br />
         Unable to add a todo
@@ -269,8 +272,7 @@ export const App: React.FC = () => {
         Unable to delete a todo
         <br />
         Unable to update a todo */}
-        </div>
-      )}
+      </div>
     </div>
   );
 };
