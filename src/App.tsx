@@ -6,14 +6,29 @@ import { USER_ID } from './api/todos';
 import { getTodos } from './api/todos';
 import { Todo } from './types/Todo';
 import classNames from 'classnames';
+enum Filter {
+  All = 'All',
+  Active = 'Active',
+  Completed = 'Completed',
+}
+enum ErrorMessage {
+  Empty = '',
+  LoadError = 'Unable to load todos',
+  TitleError = 'Title should not be empty',
+  AddError = 'Unable to add a todo',
+  DeleteError = 'Unable to delete a todo',
+  UpdateError = 'Unable to update a todo',
+}
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const completedTodosNumber = todos.filter(todo => !todo.completed).length;
-  const [selectedFilter, setSelectedFilter] = useState<string>('All');
+  const [selectedFilter, setSelectedFilter] = useState<Filter>(Filter.All);
   const [filteredTodos, setFilteredTodos] = useState<Todo[]>(todos);
-  const [showError, setShowError] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<ErrorMessage>(
+    ErrorMessage.Empty,
+  );
 
   const closeError = () => {
     setShowError(false);
@@ -28,19 +43,19 @@ export const App: React.FC = () => {
       setTimeout(() => {
         setShowError(false);
       }, 3000);
-      setErrorMessage('Unable to load todos');
+      setErrorMessage(ErrorMessage.LoadError);
     }
   };
-  const selectNewFilter = (newFilter: string) => {
+  const selectNewFilter = (newFilter: Filter) => {
     setSelectedFilter(newFilter);
     switch (newFilter) {
-      case 'All':
+      case Filter.All:
         setFilteredTodos(todos);
         break;
-      case 'Active':
+      case Filter.Active:
         setFilteredTodos(todos.filter(todo => !todo.completed));
         break;
-      case 'Completed':
+      case Filter.Completed:
         setFilteredTodos(todos.filter(todo => todo.completed));
         break;
       default:
@@ -207,7 +222,7 @@ export const App: React.FC = () => {
                   selected: selectedFilter === 'All',
                 })}
                 data-cy="FilterLinkAll"
-                onClick={() => selectNewFilter('All')}
+                onClick={() => selectNewFilter(Filter.All)}
               >
                 All
               </a>
@@ -218,7 +233,7 @@ export const App: React.FC = () => {
                   selected: selectedFilter === 'Active',
                 })}
                 data-cy="FilterLinkActive"
-                onClick={() => selectNewFilter('Active')}
+                onClick={() => selectNewFilter(Filter.Active)}
               >
                 Active
               </a>
@@ -229,7 +244,7 @@ export const App: React.FC = () => {
                   selected: selectedFilter === 'Completed',
                 })}
                 data-cy="FilterLinkCompleted"
-                onClick={() => selectNewFilter('Completed')}
+                onClick={() => selectNewFilter(Filter.Completed)}
               >
                 Completed
               </a>
@@ -267,14 +282,6 @@ export const App: React.FC = () => {
         />
         {/* show only one message at a time */}
         {errorMessage}
-        {/* <br />
-        Title should not be empty
-        <br />
-        Unable to add a todo
-        <br />
-        Unable to delete a todo
-        <br />
-        Unable to update a todo */}
       </div>
     </div>
   );
