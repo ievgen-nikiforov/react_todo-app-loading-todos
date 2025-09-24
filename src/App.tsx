@@ -8,9 +8,7 @@ import { Todo } from './types/Todo';
 import classNames from 'classnames';
 
 export const App: React.FC = () => {
-  if (!USER_ID) {
-    return <UserWarning />;
-  }
+
   const [todos, setTodos] = useState<Todo[]>([]);
   const completedTodosNumber = todos.filter(todo => !todo.completed).length;
   const [selectedFilter, setSelectedFilter] = useState<string>('All');
@@ -34,7 +32,9 @@ export const App: React.FC = () => {
   useEffect(() => {
     fetchTodos();
   }, []);
-
+  if (!USER_ID) {
+    return <UserWarning />;
+  }
   const selectNewFilter = (newFilter: string) => {
     setSelectedFilter(newFilter);
     switch (newFilter) {
