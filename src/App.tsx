@@ -25,6 +25,9 @@ export const App: React.FC = () => {
       setTodos(data);
     } catch (error) {
       setShowError(true);
+      setTimeout(() => {
+        setShowError(false);
+      }, 3000);
       setErrorMessage('Unable to load todos');
     }
   };
