@@ -28,13 +28,6 @@ export const App: React.FC = () => {
       setErrorMessage('Unable to load todos');
     }
   };
-  useEffect(() => {
-    fetchTodos();
-  }, []);
-  useEffect(() => selectNewFilter(selectedFilter), [todos]);
-  if (!USER_ID) {
-    return <UserWarning />;
-  }
   const selectNewFilter = (newFilter: string) => {
     setSelectedFilter(newFilter);
     switch (newFilter) {
@@ -51,6 +44,13 @@ export const App: React.FC = () => {
         setFilteredTodos(todos);
     }
   };
+  useEffect(() => {
+    fetchTodos();
+  }, []);
+  useEffect(() => selectNewFilter(selectedFilter), [todos]);
+  if (!USER_ID) {
+    return <UserWarning />;
+  }
 
   return (
     <div className="todoapp">
