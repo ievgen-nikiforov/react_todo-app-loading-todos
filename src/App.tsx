@@ -8,30 +8,30 @@ import { Todo } from './types/Todo';
 import classNames from 'classnames';
 
 export const App: React.FC = () => {
-
   const [todos, setTodos] = useState<Todo[]>([]);
   const completedTodosNumber = todos.filter(todo => !todo.completed).length;
   const [selectedFilter, setSelectedFilter] = useState<string>('All');
   const [filteredTodos, setFilteredTodos] = useState<Todo[]>(todos);
-  const [showError, setShowError] = useState<boolean>(false)
-  const [errorMessage, setErrorMessage] = useState<string>('')
+  const [showError, setShowError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const closeError=()=>{
-    setShowError(false)
-  }
+  const closeError = () => {
+    setShowError(false);
+  };
   const fetchTodos = async () => {
-    setShowError(false)
-    try{
-    const data: Todo[] = await getTodos();
-    setTodos(data);
-    } catch(error){
-      setShowError(true)
+    setShowError(false);
+    try {
+      const data: Todo[] = await getTodos();
+      setTodos(data);
+    } catch (error) {
+      setShowError(true);
       setErrorMessage('Unable to load todos');
     }
   };
   useEffect(() => {
     fetchTodos();
   }, []);
+  useEffect(() => selectNewFilter(selectedFilter), [todos]);
   if (!USER_ID) {
     return <UserWarning />;
   }
@@ -51,7 +51,7 @@ export const App: React.FC = () => {
         setFilteredTodos(todos);
     }
   };
-    useEffect(() => selectNewFilter(selectedFilter), [todos]);
+
   return (
     <div className="todoapp">
       <h1 className="todoapp__title">todos</h1>
@@ -248,14 +248,20 @@ export const App: React.FC = () => {
 
       {/* DON'T use conditional rendering to hide the notification */}
       {/* Add the 'hidden' class to hide the message smoothly */}
-      {showError&&(<div
-        data-cy="ErrorNotification"
-        className="notification is-danger is-light has-text-weight-normal"
-      >
-        <button data-cy="HideErrorButton" type="button" className="delete" onClick={()=>closeError()} />
-        {/* show only one message at a time */}
-        {errorMessage}
-        {/* <br />
+      {showError && (
+        <div
+          data-cy="ErrorNotification"
+          className="notification is-danger is-light has-text-weight-normal"
+        >
+          <button
+            data-cy="HideErrorButton"
+            type="button"
+            className="delete"
+            onClick={() => closeError()}
+          />
+          {/* show only one message at a time */}
+          {errorMessage}
+          {/* <br />
         Title should not be empty
         <br />
         Unable to add a todo
@@ -263,7 +269,8 @@ export const App: React.FC = () => {
         Unable to delete a todo
         <br />
         Unable to update a todo */}
-      </div>)}
+        </div>
+      )}
     </div>
   );
 };
